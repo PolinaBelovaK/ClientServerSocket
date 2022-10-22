@@ -1,0 +1,35 @@
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+public class Client {
+    public static void main(String[] args) {
+        try (
+                //Create a connection:
+                Socket socket = new Socket("127.0.0.1", 8000);
+                //Create writer:
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(
+                                socket.getOutputStream()));
+                //Create reader:
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(
+                                socket.getInputStream()))
+                ) {
+            System.out.println("Connected to server!");
+            String request = "Hello";
+            System.out.println("Request: " + request);
+            writer.write(request);
+            writer.newLine();
+            writer.flush();
+
+            String response = reader.readLine();
+            System.out.println("Response: " + response);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+}
